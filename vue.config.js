@@ -13,5 +13,13 @@ module.exports = defineConfig({
             },
         },
     },
-    lintOnSave: false //关闭eslint检查
+    lintOnSave: false, //关闭eslint检查
+    devServer: {
+        proxy: {
+            "/api": {
+                target: "https://mallapi.duyiedu.com/passport/login",
+                changeOrigin: true, // 允许跨域请求
+            },
+        },
+    },
 });

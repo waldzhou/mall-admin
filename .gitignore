@@ -1,3 +1,6 @@
+# git checkout -b 8-2 开启一个新分支
+
+
 .DS_Store
 node_modules
 /dist

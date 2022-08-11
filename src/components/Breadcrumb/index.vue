@@ -17,10 +17,10 @@
     </div>
     <ul class="user-info">
       <li>
-        欢迎 waldzhou
+        欢迎 {{ $store.state.user.username }}
         <a-icon type="down" />
       </li>
-      <li>退出</li>
+      <li @click="handleLogout">退出</li>
     </ul>
   </div>
 </template>
@@ -32,6 +32,10 @@ export default {
   methods: {
     toggleCollapsed() {
       this.$store.dispatch("changeCollapsed");
+    },
+    handleLogout() {
+      this.$store.dispatch("logout");
+      this.$router.push({ name: "login" });
     },
   },
 };
