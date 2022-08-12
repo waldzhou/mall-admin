@@ -16,7 +16,9 @@ const routes = [{
         name: 'login',
         component: Login, //路由预加载，第一次加载项目的时候较慢
         meta: {
-            title: '登录'
+            title: '登录',
+            show: false,
+            icon: ''
         }
     },
     {
@@ -24,7 +26,9 @@ const routes = [{
         name: 'home',
         meta: {
             title: '首页',
-            requireAuth: true
+            requireAuth: true,
+            show: true,
+            icon: 'home'
         },
         component: Home,
         children: [{
@@ -32,17 +36,21 @@ const routes = [{
             name: 'count',
             meta: {
                 title: '统计',
-                requireAuth: true
+                requireAuth: true,
+                show: true,
+                icon: 'bug'
             },
             component: () =>
-                import ('@/views/Home')
+                import ('@/views/Count')
         }]
     },
     {
         path: '/logon',
         name: 'logon',
         meta: {
-            title: '注册'
+            title: '注册',
+            show: false,
+            icon: ''
         },
         component: Logon
     },
@@ -53,14 +61,19 @@ const router = new VueRouter({
 });
 
 // 路由拦截
+let isAddRoutes = false;
 router.beforeEach((to, from, next) => {
     if (to.path != '/login') {
         if (store.state.user.username && store.state.user.role && store.state.user.appkey) {
-            const roleRoutes = decideRoutes(store.state.user.role);
-            for (let i = 0; i < roleRoutes.length; i++) {
-                router.addRoute(roleRoutes[i]);
+            if (!isAddRoutes) {
+                const roleRoutes = decideRoutes(store.state.user.role);
+                store.dispatch('setMenuRoutes', routes.concat(roleRoutes)).then(() => {
+                    for (let i = 0; i < roleRoutes.length; i++) {
+                        router.addRoute(roleRoutes[i]);
+                    }
+                })
             }
-            store.dispatch('setMenuRoutes', routes.concat(roleRoutes));
+            isAddRoutes = true;
             next();
         } else {
             next('/login');

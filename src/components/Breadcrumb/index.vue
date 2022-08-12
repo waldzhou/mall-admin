@@ -9,9 +9,13 @@
     </a-button>
     <div class="breadcrumb">
       <a-breadcrumb>
-        <a-breadcrumb-item>首页</a-breadcrumb-item>
+        <a-breadcrumb-item>{{
+          menuRoute[0] ? menuRoute[0].meta.title : ""
+        }}</a-breadcrumb-item>
         <a-breadcrumb-item>
-          <a href>统计</a>
+          <router-link :to="{ name: menuRoute[1] ? menuRoute[1].name : '' }">{{
+            menuRoute[1] ? menuRoute[1].meta.title : ""
+          }}</router-link>
         </a-breadcrumb-item>
       </a-breadcrumb>
     </div>
@@ -27,7 +31,19 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      menuRoute: {},
+      // {
+      //   name: "home",
+      //   meta: {
+      //     title: "首页",
+      //   },
+      // },
+      // { name: "count",
+      // meta:{
+      //   title:'统计'
+      // } },
+    };
   },
   methods: {
     toggleCollapsed() {
@@ -36,6 +52,14 @@ export default {
     handleLogout() {
       this.$store.dispatch("logout");
       this.$router.push({ name: "login" });
+    },
+  },
+  created() {
+    console.log(this.$router.currentRoute.matched[0].meta.title);
+  },
+  watch: {
+    $route() {
+      this.menuRoute = this.$router.currentRoute.matched;
     },
   },
 };
